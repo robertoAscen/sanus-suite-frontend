@@ -1,0 +1,19 @@
+<app-card cardTitle="Switches">
+  <div class="row">
+    @for (item of SwitchGroup; track item) {
+      <div class="col-xl-4 col-md-6 mb-5">
+        <h5>{{ item.title }}</h5>
+        <hr />
+        @for (item of item?.switches; track item) {
+          <div class="form-group">
+            <div class="switch d-inline m-r-10 {{ item.color }}">
+              <input type="checkbox" [id]="item.id" [checked]="item.checked" [disabled]="item.disabled" />
+              <label [for]="item.id" class="cr"></label>
+            </div>
+            <label class="ms-2">{{ item.label }}</label>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</app-card>

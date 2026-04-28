@@ -1,0 +1,43 @@
+<app-card cardTitle="Radio Button">
+  <div class="row">
+    @for (checkboxGroup of checkboxGroups; track checkboxGroup) {
+      <div class="col-xl-4 col-md-6 mb-5">
+        <h5>{{ checkboxGroup.title }}</h5>
+        <hr />
+        @for (checkbox of checkboxGroup?.checkboxes; track checkbox) {
+          <div class="form-group">
+            <div class="checkbox {{ checkbox.color }}" [ngClass]="{ 'd-inline': checkbox.inline, 'm-r-10': checkbox.bordered }">
+              <input
+                type="checkbox"
+                [id]="checkbox.id"
+                [name]="checkbox.name"
+                [disabled]="checkbox.disabled"
+                [checked]="checkbox.checked"
+              />
+              <label [for]="checkbox.id" class="cr">{{ checkbox.label }}</label>
+            </div>
+          </div>
+        }
+        <h5 class="mt-4">{{ checkboxGroup.title2 }}</h5>
+        <hr />
+        @for (checkbox of checkboxGroup?.checkboxes2; track checkbox) {
+          <div class="form-group">
+            <div
+              class="checkbox checkbox-fill {{ checkbox.color }}"
+              [ngClass]="{ 'd-inline': checkbox.inline, 'm-r-10': checkbox.bordered }"
+            >
+              <input
+                type="checkbox"
+                [id]="checkbox.id"
+                [name]="checkbox.name"
+                [disabled]="checkbox.disabled"
+                [checked]="checkbox.checked"
+              />
+              <label [for]="checkbox.id" class="cr">{{ checkbox.label }}</label>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</app-card>

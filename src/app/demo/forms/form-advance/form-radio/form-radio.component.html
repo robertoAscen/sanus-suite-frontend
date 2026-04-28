@@ -1,0 +1,18 @@
+<app-card cardTitle="Radio Button">
+  <div class="row">
+    @for (radioGroups of RadioGroups; track radioGroups) {
+      <div class="col-xl-4 col-md-6 mb-5">
+        <h5>{{ radioGroups.title }}</h5>
+        <hr />
+        @for (radio of radioGroups?.defaultRadios; track radio) {
+          <div class="form-group">
+            <div class="radio d-inline {{ radio.color }}">
+              <input type="radio" [name]="radio.name" [id]="radio.id" [checked]="radio.checked" [disabled]="radio.disabled" />
+              <label [for]="radio.id" class="cr">{{ radio.label }}</label>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</app-card>

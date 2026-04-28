@@ -1,0 +1,130 @@
+<p>todo-list works!</p>
+<div class="row">
+  <div class="col-xl-6">
+    <app-card cardTitle="To Do Card List">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          [(ngModel)]="newTodoCard"
+          autocomplete="off"
+          name="task-insert"
+          class="form-control"
+          placeholder="Create your task list"
+          (keyup)="todo_card_message_error = false"
+        />
+        <span
+          class="input-group-text"
+          id="todoCard"
+          [ngClass]="{ 'bg-danger btn-danger': todo_card_message_error, 'bg-primary btn-primary': !todo_card_message_error }"
+          (click)="addTodoCard()"
+          type="button"
+        >
+          <i class="fa fa-plus"></i
+        ></span>
+      </div>
+      <section id="task-container">
+        <ul id="task-list">
+          @for (item of todoCard; track $index) {
+            <li appTodoCardComplete>
+              <p>{{ item.title }}</p>
+            </li>
+          }
+        </ul>
+        <div class="text-center">
+          <button id="clear-all-tasks" class="btn btn-primary m-b-0" type="button" (click)="clearAllTodoCard()">Clear All Tasks</button>
+        </div>
+      </section>
+    </app-card>
+  </div>
+  <div class="col-sm-6">
+    <app-card cardTitle="To Do List">
+      <div class="input-group mb-3">
+        <input
+          type="text"
+          class="form-control add_task_todo"
+          [(ngModel)]="newTaskTitle"
+          placeholder="Create your task list"
+          aria-label="Recipient's username"
+          aria-describedby="basic-addon2"
+          (keyup)="todo_list_message_error = false"
+        />
+        <span
+          class="input-group-text"
+          id="basic-addon2"
+          [ngClass]="{ 'bg-danger btn-danger': todo_list_message_error, 'bg-primary btn-primary': !todo_list_message_error }"
+          (click)="addTodoList()"
+          type="button"
+        >
+          <i class="fa fa-plus"></i
+        ></span>
+      </div>
+      <div class="new-task">
+        @for (task of tasks; track task; let i = $index) {
+          <div class="to-do-list mb-3">
+            <div class="d-inline-block">
+              <label class="check-task custom-control custom-checkbox d-flex justify-content-center">
+                <input type="checkbox" class="form-check-input cr" [(ngModel)]="task.completed" />
+                <span class="custom-control-label pt-1 px-2">{{ task.title }}</span>
+              </label>
+            </div>
+            <div class="float-end">
+              <a href="javascript:" (click)="deleteTask(task.id)" title="Delete" class="delete_todolist"
+                ><i class="far fa-trash-alt"></i
+              ></a>
+            </div>
+          </div>
+        }
+      </div>
+    </app-card>
+  </div>
+  <div class="col-xl-12">
+    <app-card cardTitle="To Do List in Modal">
+      <div class="tasks-widget">
+        @for (tasks of tasksModal; track tasks; let i = $index) {
+          <div class="to-do-list mb-3">
+            <div class="d-inline-block">
+              <label class="check-task custom-control custom-checkbox d-flex justify-content-center">
+                <input type="checkbox" class="form-check-input cr me-2" [(ngModel)]="tasks.completed" />
+                <span class="custom-control-label">{{ tasks.title }}</span>
+              </label>
+            </div>
+            <div class="float-end">
+              <a href="javascript:" title="Delete" class="delete_todolist" (click)="deleteTaskModal(tasks.id)"
+                ><i class="far fa-trash-alt"></i
+              ></a>
+            </div>
+          </div>
+        }
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary btn-add-task m-t-10" (click)="open(content)">Add New Tasks</button>
+        <ng-template #content let-modal>
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLiveLabel">Add New Todo</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.close('Close click')"></button>
+          </div>
+          <div class="modal-body">
+            <input
+              type="text"
+              class="form-control add_task_todo"
+              [(ngModel)]="newModalMessage"
+              placeholder="Create your task list"
+              [ngModelOptions]="{ standalone: true }"
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              [ngClass]="{ 'btn-danger': todo_modal_message_error, 'btn-primary': !todo_modal_message_error }"
+              (click)="modal.close('Save click'); addTodoModal()"
+            >
+              Save
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')"> Close </button>
+          </div>
+        </ng-template>
+      </div>
+    </app-card>
+  </div>
+</div>
