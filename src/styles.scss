@@ -88,3 +88,10 @@ File: style.css
   @import 'scss/layout-rtl-utility.scss';
   @import 'node_modules/bootstrap/scss/utilities/api';
 }
+
+/* ==========================================================================
+   OCULTAR CUSTOMIZADOR (BOTÓN NARANJA DE GRADIENT ABLE)
+   ========================================================================== */
+.menu-styler {
+  display: none !important;
+}
