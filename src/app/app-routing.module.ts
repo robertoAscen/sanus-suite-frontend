@@ -21,6 +21,10 @@ const routes: Routes = [
         loadChildren: () => import('./demo/dashboard/dashboard.module').then((module) => module.DashboardModule)
       },
       {
+        path: 'patients',
+        loadChildren: () => import('./components/pacientes/pacientes.module').then(module => module.PacientesModule)
+      },
+      {
         path: 'layout',
         loadChildren: () => import('./demo/pages/layout/layout.module').then((module) => module.LayoutModule)
       },
