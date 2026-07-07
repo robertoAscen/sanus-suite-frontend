@@ -87,6 +87,10 @@
                       <i class="feather icon-more-vertical" style="font-size: 18px"></i>
                     </button>
                     <div ngbDropdownMenu>
+                      <!-- NUEVA OPCIÓN: Acceso directo a la Historia Clínica -->
+                      <a class="dropdown-item font-weight-bold text-primary" [routerLink]="['/patients/history/', patient.numeroExpediente]">
+                        <i class="feather icon-activity text-primary mr-2"></i> Historia Clínica
+                      </a>
                       <a class="dropdown-item" [routerLink]="['/patients/editPatient/', patient.id]">
                         <i class="feather icon-edit-2 text-warning mr-2"></i> Editar Expediente
                       </a>

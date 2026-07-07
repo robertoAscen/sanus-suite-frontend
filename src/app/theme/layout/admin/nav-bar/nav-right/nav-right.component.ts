@@ -1,16 +1,17 @@
 // angular import
-import { Component, DoCheck } from '@angular/core';
+import { Component, DoCheck, OnInit } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { Router } from '@angular/router'; // <-- NUEVO IMPORT
 
 // bootstrap import
 import { NgbDropdownConfig } from '@ng-bootstrap/ng-bootstrap';
-import { AuthenticationService } from 'src/app/theme/shared/service/authentication.service';
 
 // project import
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { ChatUserListComponent } from './chat-user-list/chat-user-list.component';
 import { ChatMsgComponent } from './chat-msg/chat-msg.component';
 import { GradientConfig } from 'src/app/app-config';
+import { TokenStorageService } from '../../../../../services/tokenStorage.service'; // <-- NUEVO IMPORT (Ajusta la ruta según tus carpetas)
 
 // third party
 import { TranslateService } from '@ngx-translate/core';
@@ -33,20 +34,27 @@ import { TranslateService } from '@ngx-translate/core';
     ])
   ]
 })
-export class NavRightComponent implements DoCheck {
+export class NavRightComponent implements OnInit, DoCheck {
   // public props
   visibleUserList: boolean;
   chatMessage: boolean;
   friendId!: number;
   gradientConfig = GradientConfig;
+  currentUser: any = null; // <-- Propiedad para almacenar los datos del usuario logueado
 
   // constructor
   constructor(
-    private authenticationService: AuthenticationService,
+    private tokenStorage: TokenStorageService, // <-- Usamos tu almacén real
+    private router: Router,                    // <-- Inyectamos el router para redirigir
     private translate: TranslateService
   ) {
     this.visibleUserList = false;
     this.chatMessage = false;
+  }
+
+  ngOnInit() {
+    // Recuperamos el usuario logueado al iniciar el componente de navegación
+    this.currentUser = this.tokenStorage.getUser();
   }
 
   // public method
@@ -64,7 +72,11 @@ export class NavRightComponent implements DoCheck {
   }
 
   logout() {
-    this.authenticationService.logout();
+    // 1. Limpiamos tanto sessionStorage como localStorage
+    this.tokenStorage.logout();
+    
+    // 2. Redirigimos explícitamente a la pantalla de firma
+    this.router.navigate(['auth', 'signin-v2']);
   }
 
   // user according language change of sidebar menu item

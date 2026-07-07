@@ -5,15 +5,17 @@ import { Routes, RouterModule } from '@angular/router';
 // project import
 import { AdminComponent } from './theme/layout/admin/admin.component';
 import { GuestComponent } from './theme/layout/guest/guest.component';
+import { AuthGuard } from './guards/auth.guard'; // <-- Ajustado a la Clase con Mayúscula
 
 const routes: Routes = [
   {
     path: '',
     component: AdminComponent,
+    canActivate: [AuthGuard], // <-- RECOMENDACIÓN: Si pones el guard aquí, proteges TODO el Layout de Admin de un solo golpe
     children: [
       {
         path: '',
-        redirectTo: '/auth/signin-v2',
+        redirectTo: 'dashboard', // Redirige al dashboard por defecto si ya está autenticado
         pathMatch: 'full'
       },
       {
@@ -22,7 +24,9 @@ const routes: Routes = [
       },
       {
         path: 'patients',
-        loadChildren: () => import('./components/pacientes/pacientes.module').then(module => module.PacientesModule)
+        // Si decidiste no proteger todo el admin, dejas el guard individual aquí:
+        // canActivate: [AuthGuard], 
+        loadChildren: () => import('./components/pacientes/pacientes.module').then((module) => module.PacientesModule)
       },
       {
         path: 'layout',
@@ -94,8 +98,7 @@ const routes: Routes = [
       },
       {
         path: 'full-calendar',
-        loadChildren: () =>
-          import('./demo/extension/full-event-calendar/full-event-calendar.module').then((module) => module.FullEventCalendarModule)
+        loadChildren: () => import('./demo/extension/full-event-calendar/full-event-calendar.module').then((module) => module.FullEventCalendarModule)
       },
       {
         path: 'file-upload',
@@ -116,11 +119,23 @@ const routes: Routes = [
         loadChildren: () => import('./demo/pages/authentication/authentication.module').then((module) => module.AuthenticationModule)
       },
       {
+        path: 'login', // Añadimos un puente limpio por si acceden directo a /login
+        redirectTo: 'auth/signin-v2',
+        pathMatch: 'full'
+      },
+      {
         path: 'maintenance',
         loadChildren: () => import('./demo/pages/maintenance/maintenance.module').then((module) => module.MaintenanceModule)
       }
     ]
   },
+  // Redirección global por defecto si entran a la raíz sin sesión
+  {
+    path: '',
+    redirectTo: 'auth/signin-v2',
+    pathMatch: 'full'
+  },
+  // Comodín global para cualquier ruta rota: muestra la página de error 404 de tu plantilla
   {
     path: '**',
     loadComponent: () => import('./demo/pages/maintenance/mainten-error/mainten-error.component').then((c) => c.MaintenErrorComponent)
