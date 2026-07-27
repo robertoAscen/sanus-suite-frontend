@@ -12,6 +12,9 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ErrorInterceptor } from 'src/app/theme/shared/_helpers/error.interceptor';
 import { BasicAuthInterceptor } from 'src/app/theme/shared/_helpers/basic-auth.interceptor';
 
+// NUEVO IMPORT: Tu interceptor JWT
+import { JwtInterceptor } from './/interceptors/jwt.interceptor'; 
+
 // third party
 import { ToastrModule } from 'ngx-toastr';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
@@ -30,6 +33,8 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
     HttpClientModule
   ],
   providers: [
+    // Registramos tu JwtInterceptor en la cadena de interceptores de la plantilla
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],
