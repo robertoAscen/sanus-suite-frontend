@@ -23,7 +23,7 @@ export class PacienteService {
         .set('x-usuario', usuario);
 
     // Nota: Eliminamos el stringify manual si el HttpClient de Angular ya procesa el objeto
-    return this._http.post(this.url + '/sanus-suite/pacientes/api/v1/guardar-paciente', patient, { headers: headers });
+    return this._http.post(this.url + '/sanus-suite/pacientes/api/v1/guardar', patient, { headers: headers });
 }
 
 updatePatient(id: any, patient: any): Observable<any> {
@@ -62,7 +62,7 @@ updatePatient(id: any, patient: any): Observable<any> {
       .set('x-usuario', usuario);
 
     // 3. Apuntamos a la ruta exacta del controlador de Spring
-    return this._http.get(this.url + '/sanus-suite/pacientes/api/v1/listar-pacientes', { headers: headers });
+    return this._http.get(this.url + '/sanus-suite/pacientes/api/v1/listar', { headers: headers });
   }
 
   deletePatient(id: any): Observable<any> {
@@ -77,7 +77,7 @@ updatePatient(id: any, patient: any): Observable<any> {
       .set('x-usuario', usuario);
 
     // Apuntamos al endpoint exacto que probamos con curl: /baja-paciente/{id}
-    return this._http.delete(this.url + '/sanus-suite/pacientes/api/v1/baja-paciente/' + id, { headers: headers });
+    return this._http.delete(this.url + '/sanus-suite/pacientes/api/v1/baja/' + id, { headers: headers });
   }
 
   getPatientFileList(id: any): Observable<any> {

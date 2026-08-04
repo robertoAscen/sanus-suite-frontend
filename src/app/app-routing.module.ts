@@ -25,8 +25,12 @@ const routes: Routes = [
       {
         path: 'patients',
         // Si decidiste no proteger todo el admin, dejas el guard individual aquí:
-        // canActivate: [AuthGuard], 
+        // canActivate: [AuthGuard],
         loadChildren: () => import('./components/pacientes/pacientes.module').then((module) => module.PacientesModule)
+      },
+      {
+        path: 'historias-clinicas',
+        loadChildren: () => import('./components/historia-clinica/historia-clinica.module').then((m) => m.HistoriaClinicaModule)
       },
       {
         path: 'layout',
@@ -98,7 +102,8 @@ const routes: Routes = [
       },
       {
         path: 'full-calendar',
-        loadChildren: () => import('./demo/extension/full-event-calendar/full-event-calendar.module').then((module) => module.FullEventCalendarModule)
+        loadChildren: () =>
+          import('./demo/extension/full-event-calendar/full-event-calendar.module').then((module) => module.FullEventCalendarModule)
       },
       {
         path: 'file-upload',

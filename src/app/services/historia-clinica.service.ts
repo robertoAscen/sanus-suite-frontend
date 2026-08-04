@@ -1,65 +1,60 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Global } from './global'; // Asegúrate de apuntar a tu archivo global de URLs
-import { HistoriaClinica } from '../models/historia-clinica.model'; // Ajusta la ruta de tus modelos
-import { TokenStorageService } from './tokenStorage.service';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HistoriaClinicaRequestDto, HistoriaClinicaResponseDto, RespuestaApi } from '../models/historia-clinica.model';
+import { Global } from './global';
+import { TokenStorageService } from '../services/tokenStorage.service'; // Inyectamos el storage
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoriaClinicaService {
-  // URL base mapeada al @RequestMapping del Controller de Spring
-  private readonly baseUrl = `${Global.url}/sanus-suite/historias-clinicas/api/v1`;
+  public url: string;
 
   constructor(
     private http: HttpClient,
-    private tokenService: TokenStorageService) {}
+    private tokenStorage: TokenStorageService
+  ) {
+    this.url = Global.url;
+  }
 
-  /**
-   * Helper para obtener los headers obligatorios de la API de Sanus Suite.
-   * Modifica el 'clinica-default' por el método o token con el que manejes tus subdominios/tenants.
-   */
   private getHeaders(): HttpHeaders {
-    let tenantId = this.tokenService.getTenantId();
-    console.log("tenant: " + tenantId);
-    return new HttpHeaders({
-      'Content-Type': 'application/json',
-      'x-tenant-id': String(tenantId) // <-- Aquí inyectas tu identificador dinámico de base de datos
-    });
+    // Limpiamos cualquier comilla residual que deje JSON.stringify/parse
+    const rawTenant = this.tokenStorage.getTenantId();
+    const rawUser = this.tokenStorage.getUserId();
+
+    const tenantId = rawTenant ? String(rawTenant).replace(/"/g, '') : 'CLINICA-GDI-01';
+    const userId = rawUser ? String(rawUser).replace(/"/g, '') : '1';
+
+    return new HttpHeaders().set('Content-Type', 'application/json').set('x-tenant-id', tenantId).set('x-usuario-id', userId);
+  }
+
+  guardar(dto: HistoriaClinicaRequestDto): Observable<HistoriaClinicaResponseDto> {
+    return this.http
+      .post<
+        RespuestaApi<HistoriaClinicaResponseDto>
+      >(`${this.url}/sanus-suite/historias-clinicas/api/v1/guardar`, dto, { headers: this.getHeaders() })
+      .pipe(map((response) => response.resultado));
+  }
+
+  obtenerPorExpediente(numeroExpediente: string): Observable<HistoriaClinicaResponseDto> {
+    return this.http
+      .get<
+        RespuestaApi<HistoriaClinicaResponseDto>
+      >(`${this.url}/sanus-suite/historias-clinicas/api/v1/expediente/${numeroExpediente}`, { headers: this.getHeaders() })
+      .pipe(map((response) => response.resultado));
   }
 
   /**
-   * Recupera la historia clínica de un paciente mediante el ID del expediente
-   * GET /historias-clinicas/api/v1/expediente/{expedienteId}
+   * Envía la solicitud para firmar y sellar legalmente la Historia Clínica.
+   * Transmite el userId recuperado de la sesión activa como QueryParam.
    */
-  obtenerPorExpediente(numeroExpediente: string): Observable<HistoriaClinica> {
-    return this.http.get<any>(`${this.baseUrl}/expediente/${numeroExpediente}`, { headers: this.getHeaders() })
-      .pipe(
-        map(response => response.resultado as HistoriaClinica) // Desempaquetamos la RespuestaApi.java
-      );
-  }
-
-  /**
-   * Guarda o actualiza un registro clínico completo (Antecedentes + Padecimiento actual)
-   * POST /historias-clinicas/api/v1/guardar
-   */
-  guardarOActualizar(historia: HistoriaClinica): Observable<HistoriaClinica> {
-    return this.http.post<any>(`${this.baseUrl}/guardar`, historia, { headers: this.getHeaders() })
-      .pipe(
-        map(response => response.resultado as HistoriaClinica)
-      );
-  }
-
-  /**
-   * Sella y bloquea legalmente la historia clínica utilizando el ID del médico actual
-   * PUT /historias-clinicas/api/v1/firmar/{id}/medico/{medicoId}
-   */
-  firmarDocumento(historiaId: number, medicoId: number): Observable<HistoriaClinica> {
-    return this.http.put<any>(`${this.baseUrl}/firmar/${historiaId}/medico/${medicoId}`, {}, { headers: this.getHeaders() })
-      .pipe(
-        map(response => response.resultado as HistoriaClinica)
-      );
+  firmar(historiaId: number): Observable<HistoriaClinicaResponseDto> {
+    return this.http
+      .post<
+        RespuestaApi<HistoriaClinicaResponseDto>
+      >(`${this.url}/sanus-suite/historias-clinicas/api/v1/firmar/${historiaId}`, {}, { headers: this.getHeaders() })
+      .pipe(map((response) => response.resultado));
   }
 }

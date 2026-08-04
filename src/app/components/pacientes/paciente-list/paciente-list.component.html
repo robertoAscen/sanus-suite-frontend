@@ -88,7 +88,7 @@
                     </button>
                     <div ngbDropdownMenu>
                       <!-- NUEVA OPCIÓN: Acceso directo a la Historia Clínica -->
-                      <a class="dropdown-item font-weight-bold text-primary" [routerLink]="['/patients/history/', patient.numeroExpediente]">
+                      <a class="dropdown-item font-weight-bold text-primary" [routerLink]="['/historias-clinicas/expediente', patient.numeroExpediente]">
                         <i class="feather icon-activity text-primary mr-2"></i> Historia Clínica
                       </a>
                       <a class="dropdown-item" [routerLink]="['/patients/editPatient/', patient.id]">
