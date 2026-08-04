@@ -80,6 +80,7 @@ export default class AuthSigninV2Component implements OnInit {
           // Evaluamos la estructura común del backend buscando el token
           const tokenExtraido = respuesta.resultado.token;
           const usernameExtraido = respuesta.resultado.username;
+          const userIdExtraido = respuesta.resultado.id;
           const fullNameExtraido = respuesta.resultado.fullName;
           const tenantIdExtraido = respuesta.resultado.tenantId;
           const rolesExtraido: any[] = respuesta.resultado.roles;
@@ -87,7 +88,7 @@ export default class AuthSigninV2Component implements OnInit {
           if (tokenExtraido) {
             // Guardamos de forma limpia usando tu servicio centralizado
             this.tokenStorage.saveToken(tokenExtraido);
-            this.tokenStorage.saveFullDataUser(usernameExtraido, fullNameExtraido, tenantIdExtraido, rolesExtraido);
+            this.tokenStorage.saveFullDataUser(usernameExtraido, userIdExtraido, fullNameExtraido, tenantIdExtraido, rolesExtraido);
           }
 
           this.loading = false;

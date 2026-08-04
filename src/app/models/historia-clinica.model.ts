@@ -1,56 +1,55 @@
-export interface AntecedentesHeredofamiliares {
-  diabetes?: string;
-  hipertension?: string;
-  cardiopatias?: string;
-  neoplasias?: string;
-  otrosHereditarios?: string;
+// Wrapper estándar de respuesta del Backend
+export interface RespuestaApi<T> {
+  codigoRespuesta: string;
+  mensaje: string;
+  resultado: T;
+  detalles?: string[];
 }
 
-export interface AntecedentesPersonalesPatologicos {
-  enfermedadesCronicas?: string;
-  alergias?: string;
-  quirurgicos?: string;
-  traumaticos?: string;
-  transfusionales?: string;
-  otrosPatologicos?: string;
-}
-
-export interface AntecedentesPersonalesNoPatologicos {
-  habitosHigienicos?: string;
-  alimentacion?: string;
-  vivienda?: string;
-  actividadFisica?: string;
-  toxicomanias?: string;
-}
-
-export interface AntecedentesGinecoObstetricos {
-  menarca?: number;
-  cicloMenstrual?: string;
-  gestas?: number;
-  partos?: number;
-  cesareas?: number;
-  abortos?: number;
-  fum?: string; // Lo manejamos como string para el binding con inputs tipo date (YYYY-MM-DD)
-}
-
-// Representa la relación simplificada del padre (Expediente)
-export interface ExpedienteRef {
-  id: number;
-}
-
-// Interfaz Maestra que mapea a HistoriaClinica.java
-export interface HistoriaClinica {
+// Request DTO para enviar al backend al guardar/actualizar
+export interface HistoriaClinicaRequestDto {
   id?: number;
-  tenantId?: string;
-  expediente: ExpedienteRef;
-  padecimientoActual: string;
-  antecedentesHeredofamiliares: AntecedentesHeredofamiliares;
-  antecedentesPersonalesPatologicos: AntecedentesPersonalesPatologicos;
-  antecedentesPersonalesNoPatologicos: AntecedentesPersonalesNoPatologicos;
-  antecedentesGinecoObstetricos?: AntecedentesGinecoObstetricos;
+  numeroExpediente: string;
   
-  // Campos de control clínico y firma legal
-  firmado?: boolean;
+  // CAMPOS CLÍNICOS
+  motivoConsulta: string;
+  padecimientoActual: string; // <-- OBLIGATORIO por backend (@NotBlank)
+  antecedentesHeredofamiliares?: string;
+  antecedentesPatologicos?: string;
+  antecedentesNoPatologicos?: string;
+  interrogatorioAparatosSistemas?: string;
+  exploracionFisica?: string;
+  diagnostico?: string;
+  planTratamiento?: string;
+}
+
+// Response DTO recibido desde el backend
+export interface HistoriaClinicaResponseDto {
+  id: number;
+  numeroExpediente: string;
+  
+  // CAMPOS CLÍNICOS
+  motivoConsulta: string;
+  padecimientoActual: string;
+  antecedentesHeredofamiliares?: string;
+  antecedentesPatologicos?: string;
+  antecedentesNoPatologicos?: string;
+  interrogatorioAparatosSistemas?: string;
+  exploracionFisica?: string;
+  diagnostico?: string;
+  planTratamiento?: string;
+
+  // FIRMA Y SEGURIDAD CLÍNICA (NOM-004)
+  firmado: boolean;
   fechaFirma?: string;
-  medicoFirmaId?: number;
+  firmadoPorMedicoId?: number;
+
+  // SNAPSHOT LEGAL
+  medicoNombreSnapshot?: string;
+  medicoCedulaSnapshot?: string;
+
+  // AUDITORÍA
+  tenantId: string;
+  usuarioCreacion?: string;
+  fechaCreacion?: string;
 }

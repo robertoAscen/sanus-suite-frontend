@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 const ACCESS_TOKEN = 'access_token';
+const USER_ID = 'id';
 const USERNAME = 'username';
 const FULLNAME = 'fullname';
 const TENANTID = 'tenantId';
@@ -40,12 +41,14 @@ export class TokenStorageService {
     return token;
   }
 
-  public saveFullDataUser(username: any, fullname: any, tenantId: any, roles: any[]): void {
+  public saveFullDataUser(username: any, userId: any, fullname: any, tenantId: any, roles: any[]): void {
     window.sessionStorage.removeItem(USERNAME);
+    window.sessionStorage.removeItem(USER_ID);
     window.sessionStorage.removeItem(FULLNAME);
     window.sessionStorage.removeItem(TENANTID);
     window.sessionStorage.removeItem(ROLES);
     window.sessionStorage.setItem(USERNAME, JSON.stringify(username));
+     window.sessionStorage.setItem(USER_ID, JSON.stringify(userId));
     window.sessionStorage.setItem(FULLNAME, JSON.stringify(fullname));
     window.sessionStorage.setItem(TENANTID, JSON.stringify(tenantId));
     window.sessionStorage.setItem(ROLES, JSON.stringify(roles));
@@ -55,6 +58,14 @@ export class TokenStorageService {
     const user = window.sessionStorage.getItem(USERNAME);
     if (user) {
       return JSON.parse(user);
+    }
+    return null;
+  }
+
+  public getUserId(): any {
+    const userId = window.sessionStorage.getItem(USER_ID);
+    if (userId) {
+      return JSON.parse(userId);
     }
     return null;
   }

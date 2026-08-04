@@ -13,14 +13,15 @@ const routes: Routes = [
         path: 'patientList',
         loadChildren: () => import('./paciente-list/patiente-list.module').then((module) => module.PacienteListModule)
       },
-      // NUEVA RUTA: Recibe el id dinámico del expediente del paciente
+      // 1. RUTA PARA EDITAR PACIENTE
       {
-        path: 'history/:numeroExpediente',
-        loadComponent: () => import('../historia-clinica/historia-clinica.component').then((component) => component.HistoriaClinicaComponent)
+        path: 'editPatient/:id',
+        loadChildren: () => import('./add-paciente/add-paciente.module').then((module) => module.AddPacienteModule)
       }
     ]
   }
 ];
+
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
