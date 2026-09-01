@@ -87,12 +87,37 @@
                       <i class="feather icon-more-vertical" style="font-size: 18px"></i>
                     </button>
                     <div ngbDropdownMenu>
-                      <!-- NUEVA OPCIÓN: Acceso directo a la Historia Clínica -->
-                      <a class="dropdown-item font-weight-bold text-primary" [routerLink]="['/historias-clinicas/expediente', patient.numeroExpediente]">
+                      <!-- Historia Clínica Base -->
+                      <a
+                        class="dropdown-item font-weight-bold text-primary"
+                        [routerLink]="['/historias-clinicas/expediente', patient.numeroExpediente]"
+                      >
                         <i class="feather icon-activity text-primary mr-2"></i> Historia Clínica
                       </a>
+
+                      <!-- NUEVAS ACCIONES: Notas de Evolución -->
+                      <a
+                        class="dropdown-item"
+                        [routerLink]="['/notas-evolucion/nueva']"
+                        [queryParams]="{
+                          pacienteId: patient.id,
+                          expedienteId: patient.numeroExpediente,
+                          nombrePaciente:
+                            patient.nombre + ' ' + patient.apellidoPaterno + (patient.apellidoMaterno ? ' ' + patient.apellidoMaterno : '')
+                        }"
+                      >
+                        <i class="feather icon-plus-circle text-success mr-2"></i> Nueva Nota de Evolución
+                      </a>
+
+                      <a class="dropdown-item" [routerLink]="['/notas-evolucion', 'notasEvolucionList', patient.numeroExpediente]">
+                        <i class="feather icon-file-text text-info mr-2"></i> Histórico de Notas
+                      </a>
+
+                      <div class="dropdown-divider"></div>
+
+                      <!-- Gestión de Expediente -->
                       <a class="dropdown-item" [routerLink]="['/patients/editPatient/', patient.id]">
-                        <i class="feather icon-edit-2 text-warning mr-2"></i> Editar Expediente
+                        <i class="feather icon-edit-2 text-warning mr-2"></i> Editar datos pacientes
                       </a>
                       <a class="dropdown-item" (click)="delete(patient.id)">
                         <i class="feather icon-trash-2 text-danger mr-2"></i> Dar de Baja

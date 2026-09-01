@@ -1,125 +1,163 @@
-<div class="row">
+<div class="card shadow-sm border-0 rounded-3">
+  
   <!-- Banner de Solo Lectura -->
-  <div class="col-sm-12" *ngIf="isReadOnly">
-    <div class="alert alert-warning border-left-warning" role="alert">
-      <i class="feather icon-lock me-2"></i> 
-      <strong>Expediente Firmado Legalmente:</strong> Esta historia clínica fue sellada el {{ historiaActual?.fechaFirma | date:'dd/MM/yyyy HH:mm' }} por el médico dictaminador. Se encuentra en modo de solo lectura.
+  <div class="alert alert-warning d-flex align-items-center m-3 mb-0 border-0 rounded-3" role="alert" *ngIf="isReadOnly">
+    <i class="feather icon-lock me-2 fs-5"></i> 
+    <div>
+      <strong>Expediente Firmado Legalmente:</strong> Esta historia clínica fue sellada el {{ historiaActual?.fechaFirma | date:'dd/MM/yyyy HH:mm' }} por el médico dictaminador. Modo solo lectura.
     </div>
   </div>
 
-  <div class="col-sm-12">
-    <div class="card">
-      <div class="card-header">
-        <h5>Módulo de Historia Clínica</h5>
-        <span class="text-muted">Expediente Folio: <strong>#{{ numeroExpediente }}</strong></span>
+  <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <div class="badge bg-primary-subtle text-primary p-2 me-3 rounded-2">
+        <i class="feather icon-file-text fs-4"></i>
       </div>
-      
+      <div>
+        <h5 class="mb-0 fw-bold">Módulo de Historia Clínica</h5>
+        <small class="text-muted">Expediente Folio: <strong>#{{ numeroExpediente }}</strong></small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bindeo corregido a FormGroup -->
+  <form [formGroup]="historiaForm" (ngSubmit)="guardarBorrador()">
+    <div class="card-body p-4">
+
       <!-- Pestañas de Navegación -->
-      <div class="card-body pb-0">
-        <ul class="nav nav-tabs" role="tablist">
-          <li class="nav-item">
-            <a class="nav-link" [class.active]="activeTab === 'antecedentes'" (click)="activeTab = 'antecedentes'" href="javascript:">
-              <i class="feather icon-book me-2"></i>Antecedentes
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" [class.active]="activeTab === 'padecimiento'" (click)="activeTab = 'padecimiento'" href="javascript:">
-              <i class="feather icon-activity me-2"></i>Padecimiento y Diagnóstico
-            </a>
-          </li>
-        </ul>
-      </div>
+      <ul class="nav nav-tabs nav-tabs-bottom mb-4" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link fw-semibold" [class.active]="activeTab === 'antecedentes'" (click)="activeTab = 'antecedentes'" href="javascript:void(0)">
+            <i class="feather icon-book me-2"></i>1. Antecedentes Médicos
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semibold" [class.active]="activeTab === 'padecimiento'" (click)="activeTab = 'padecimiento'" href="javascript:void(0)">
+            <i class="feather icon-activity me-2"></i>2. Padecimiento y Diagnóstico
+          </a>
+        </li>
+      </ul>
 
-      <form [formGroup]="historiaForm" (ngSubmit)="$event.preventDefault()">
-        <div class="card-body">
-          <div class="tab-content">
-            
-            <!-- TAB 1: ANTECEDENTES -->
-            <div class="tab-pane fade" [class.show]="activeTab === 'antecedentes'" [class.active]="activeTab === 'antecedentes'">
-              
-              <div class="mb-3">
-                <label class="form-label font-weight-bold text-primary">
-                  <i class="feather icon-users me-2"></i>Antecedentes Heredofamiliares
-                </label>
-                <textarea class="form-control text-uppercase" formControlName="antecedentesHeredofamiliares" rows="3" 
-                          placeholder="EJ: DIABETES (MADRE), HIPERTENSIÓN (PADRE), CARDIOPATÍAS NEGADAS..."></textarea>
-              </div>
-
-              <hr class="my-4">
-
-              <div class="mb-3">
-                <label class="form-label font-weight-bold text-danger">
-                  <i class="feather icon-heart-on me-2"></i>Antecedentes Personales Patológicos
-                </label>
-                <textarea class="form-control text-uppercase" formControlName="antecedentesPatologicos" rows="3" 
-                          placeholder="EJ: ALERGIA A PENICILINA, APENDICECTOMÍA HACE 5 AÑOS, HIPERTENSO CONTROLADO..."></textarea>
-              </div>
-
-              <hr class="my-4">
-
-              <div class="mb-3">
-                <label class="form-label font-weight-bold text-success">
-                  <i class="feather icon-smile me-2"></i>Antecedentes Personales No Patológicos
-                </label>
-                <textarea class="form-control text-uppercase" formControlName="antecedentesNoPatologicos" rows="3" 
-                          placeholder="EJ: BAÑO DIARIO, ALIMENTACIÓN ADECUADA, CICLISMO DE MONTAÑA 2 VECES/SEMANA..."></textarea>
-              </div>
-
-            </div>
-
-            <!-- TAB 2: PADECIMIENTO ACTUAL Y DIAGNÓSTICO -->
-            <div class="tab-pane fade" [class.show]="activeTab === 'padecimiento'" [class.active]="activeTab === 'padecimiento'">
-              
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label class="form-label font-weight-bold">Motivo de Consulta</label>
-                  <input type="text" class="form-control text-uppercase" formControlName="motivoConsulta" placeholder="EJ: DOLOR ABDOMINAL AGUDO">
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <label class="form-label font-weight-bold">Interrogatorio por Aparatos y Sistemas</label>
-                  <input type="text" class="form-control text-uppercase" formControlName="interrogatorioAparatosSistemas" placeholder="EJ: GASTROINTESTINAL: PIROSIS Y NÁUSEAS">
-                </div>
-
-                <div class="col-md-12 mb-3">
-                  <label class="form-label font-weight-bold text-info">Enfermedad / Padecimiento Actual *</label>
-                  <textarea class="form-control text-uppercase" formControlName="padecimientoActual" rows="4" 
-                            placeholder="ESCRIBE DE FORMA DETALLADA LA SITUACIÓN ACTUAL, INICIO, EVOLUCIÓN Y SÍNTOMAS PRIMARIOS..."></textarea>
-                </div>
-
-                <div class="col-md-12 mb-3">
-                  <label class="form-label font-weight-bold">Exploración Física</label>
-                  <textarea class="form-control text-uppercase" formControlName="exploracionFisica" rows="3" 
-                            placeholder="SIGNOS VITALES, PALPACIÓN, INSPECCIÓN GENERAL..."></textarea>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <label class="form-label font-weight-bold text-success">Diagnóstico</label>
-                  <textarea class="form-control text-uppercase" formControlName="diagnostico" rows="3" placeholder="IMPRESIÓN DIAGNÓSTICA..."></textarea>
-                </div>
-
-                <div class="col-md-6 mb-3">
-                  <label class="form-label font-weight-bold text-primary">Plan de Tratamiento</label>
-                  <textarea class="form-control text-uppercase" formControlName="planTratamiento" rows="3" placeholder="INDICACIONES MÉDICAS, MEDICAMENTOS, DIETA..."></textarea>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        </div>
-
-        <!-- Botones de Acción -->
-        <div class="card-footer text-end">
-          <button *ngIf="!isReadOnly" type="button" class="btn btn-primary me-2" (click)="guardarBorrador()" [disabled]="loading">
-            <i class="feather icon-save me-1"></i>{{ loading ? 'Guardando...' : 'Guardar Borrador' }}
-          </button>
+      <div class="tab-content">
+        
+        <!-- TAB 1: ANTECEDENTES -->
+        <div class="tab-pane fade" [class.show]="activeTab === 'antecedentes'" [class.active]="activeTab === 'antecedentes'">
           
-          <button *ngIf="!isReadOnly" type="button" class="btn btn-danger" (click)="firmarExpediente()" [disabled]="loading">
-            <i class="feather icon-check-square me-1"></i>Firmar Legalmente
-          </button>
+          <div class="mb-4">
+            <label class="form-label text-uppercase fw-bold fs-7 text-secondary">
+              <i class="feather icon-users me-2 text-primary"></i>Antecedentes Heredofamiliares
+            </label>
+            <textarea 
+              class="form-control text-uppercase" 
+              formControlName="antecedentesHeredofamiliares" 
+              rows="3" 
+              placeholder="EJ: DIABETES (MADRE), HIPERTENSIÓN (PADRE), CARDIOPATÍAS NEGADAS...">
+            </textarea>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label text-uppercase fw-bold fs-7 text-secondary">
+              <i class="feather icon-heart me-2 text-danger"></i>Antecedentes Personales Patológicos
+            </label>
+            <textarea 
+              class="form-control text-uppercase" 
+              formControlName="antecedentesPatologicos" 
+              rows="3" 
+              placeholder="EJ: ALERGIA A PENICILINA, APENDICECTOMÍA HACE 5 AÑOS, HIPERTENSO CONTROLADO...">
+            </textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label text-uppercase fw-bold fs-7 text-secondary">
+              <i class="feather icon-user-check me-2 text-success"></i>Antecedentes Personales No Patológicos
+            </label>
+            <textarea 
+              class="form-control text-uppercase" 
+              formControlName="antecedentesNoPatologicos" 
+              rows="3" 
+              placeholder="EJ: BAÑO DIARIO, ALIMENTACIÓN ADECUADA, DEPORTE 2 VECES/SEMANA...">
+            </textarea>
+          </div>
+
         </div>
-      </form>
+
+        <!-- TAB 2: PADECIMIENTO ACTUAL Y DIAGNÓSTICO -->
+        <div class="tab-pane fade" [class.show]="activeTab === 'padecimiento'" [class.active]="activeTab === 'padecimiento'">
+          
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label text-uppercase fw-bold fs-7 text-secondary">Motivo de Consulta</label>
+              <input 
+                type="text" 
+                class="form-control text-uppercase" 
+                formControlName="motivoConsulta" 
+                placeholder="EJ: DOLOR ABDOMINAL AGUDO">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-uppercase fw-bold fs-7 text-secondary">Interrogatorio por Aparatos y Sistemas</label>
+              <input 
+                type="text" 
+                class="form-control text-uppercase" 
+                formControlName="interrogatorioAparatosSistemas" 
+                placeholder="EJ: GASTROINTESTINAL: PIROSIS Y NÁUSEAS">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label text-uppercase fw-bold fs-7 text-secondary">Enfermedad / Padecimiento Actual <span class="text-danger">*</span></label>
+              <textarea 
+                class="form-control text-uppercase" 
+                formControlName="padecimientoActual" 
+                rows="4" 
+                placeholder="ESCRIBE DE FORMA DETALLADA LA SITUACIÓN ACTUAL, INICIO, EVOLUCIÓN Y SÍNTOMAS PRIMARIOS...">
+              </textarea>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label text-uppercase fw-bold fs-7 text-secondary">Exploración Física</label>
+              <textarea 
+                class="form-control text-uppercase" 
+                formControlName="exploracionFisica" 
+                rows="3" 
+                placeholder="SIGNOS VITALES, PALPACIÓN, INSPECCIÓN GENERAL...">
+              </textarea>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-uppercase fw-bold fs-7 text-secondary">Diagnóstico</label>
+              <textarea 
+                class="form-control text-uppercase" 
+                formControlName="diagnostico" 
+                rows="3" 
+                placeholder="IMPRESIÓN DIAGNÓSTICA...">
+              </textarea>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label text-uppercase fw-bold fs-7 text-secondary">Plan de Tratamiento</label>
+              <textarea 
+                class="form-control text-uppercase" 
+                formControlName="planTratamiento" 
+                rows="3" 
+                placeholder="INDICACIONES MÉDICAS, MEDICAMENTOS, DIETA...">
+              </textarea>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
     </div>
-  </div>
+
+    <!-- Botones de Acción -->
+    <div class="card-footer bg-light px-4 py-3 d-flex justify-content-end gap-2" *ngIf="!isReadOnly">
+      <button type="button" class="btn btn-outline-primary px-4" (click)="guardarBorrador()" [disabled]="loading">
+        <i class="feather icon-save me-1"></i> {{ loading ? 'Guardando...' : 'Guardar Borrador' }}
+      </button>
+      
+      <button type="button" class="btn btn-danger px-4" (click)="firmarExpediente()" [disabled]="loading">
+        <i class="feather icon-check-square me-1"></i> Firmar Legalmente
+      </button>
+    </div>
+  </form>
 </div>
