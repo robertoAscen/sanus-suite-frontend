@@ -33,6 +33,10 @@ const routes: Routes = [
         loadChildren: () => import('./components/historia-clinica/historia-clinica.module').then((m) => m.HistoriaClinicaModule)
       },
       {
+        path: 'notas-evolucion',
+        loadChildren: () => import('./components/nota-evolucion/nota-evolucion.module').then((m) => m.NotaEvolucionModule)
+      },
+      {
         path: 'layout',
         loadChildren: () => import('./demo/pages/layout/layout.module').then((module) => module.LayoutModule)
       },
