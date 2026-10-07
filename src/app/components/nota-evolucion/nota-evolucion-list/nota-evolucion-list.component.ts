@@ -74,6 +74,28 @@ export class NotasEvolucionListComponent implements OnInit, OnDestroy {
     });
   }
 
+  // Cierra modales activos y redirige al formulario de receta con queryParams
+  abrirFormularioReceta(pacienteId: number | string, notaId: number | string): void {
+    this.modalService.dismissAll();
+    this.router.navigate(['/recetas-medica/nueva'], {
+      // Ajusta la ruta según tu app-routing.module.ts
+      queryParams: {
+        pacienteId: pacienteId,
+        notaEvolucionId: notaId
+      }
+    });
+  }
+
+  // Abre la receta generada en una pestaña nueva o en un visor
+  verPdfReceta(recetaId: number | string): void {
+    this.modalService.dismissAll();
+    // Opción A: Abrir el PDF directamente si tu backend expone la URL
+    window.open(`/api/recetas-medicas/${recetaId}/pdf`, '_blank');
+
+    // Opción B: Si prefieres navegar a una vista de detalle:
+    // this.router.navigate(['/recetas/detalle', recetaId]);
+  }
+
   // Abrir modal con la nota seleccionada
   verDetalleSOAP(modalContent: TemplateRef<any>, nota: NotaEvolucionListDto): void {
     this.notaSeleccionada = nota;

@@ -4,20 +4,20 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms'; // <-- CRUCIA
 import { RouterModule } from '@angular/router';  
 import { SharedModule } from 'src/app/theme/shared/shared.module';     // <-- CRUCIAL PARA [routerLink]
 
-import { AddNotaEvolucionComponent } from './addNota-evolucion.component'; // O la ruta correcta a tu .ts
-import { AddNotaEvolucionRoutingModule } from './addNota-evolucion.routing.module';
+import { AddRecetaMedicaComponent } from './addReceta-medica.component'; // O la ruta correcta a tu .ts
+import { AddRecetaMedicaRoutingModule } from './addReceta-medica.routing.module';
 
 @NgModule({
   declarations: [
-    AddNotaEvolucionComponent
+    AddRecetaMedicaComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    AddNotaEvolucionRoutingModule,
-    SharedModule,
+    AddRecetaMedicaRoutingModule,
+    SharedModule
   ]
 })
-export class AddNotaEvolucionModule { }
+export class AddRecetaMedicaModule { }

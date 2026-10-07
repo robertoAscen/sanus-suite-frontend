@@ -21,7 +21,11 @@
         </div>
 
         <div *ngIf="expedienteParam">
-          <button class="btn btn-outline-secondary font-weight-bold mr-2" style="border-radius: 8px" [routerLink]="['/patients/patientList']">
+          <button
+            class="btn btn-outline-secondary font-weight-bold mr-2"
+            style="border-radius: 8px"
+            [routerLink]="['/patients/patientList']"
+          >
             <i class="feather icon-arrow-left mr-1"></i> Volver a Pacientes
           </button>
         </div>
@@ -266,16 +270,48 @@
     </div>
   </div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cerrar</button>
-    <!-- SOLO VISIBLE SI NO ESTÁ FIRMADA -->
-    <button
-      *ngIf="!notaSeleccionada?.firmado"
-      type="button"
-      class="btn btn-primary"
-      (click)="modal.dismiss(); editarNota(notaSeleccionada!)"
-    >
-      <i class="feather icon-edit-2 mr-1"></i> Editar Nota
-    </button>
+  <!-- MODAL FOOTER CORREGIDO -->
+  <div class="modal-footer d-flex justify-content-between align-items-center" *ngIf="notaSeleccionada">
+    <div>
+      <!-- CASO 1: NOTA EN BORRADOR / NO FIRMADA -->
+      <span *ngIf="!notaSeleccionada.firmado" class="text-warning small font-weight-bold">
+        <i class="feather icon-alert-circle mr-1"></i>
+        Firme la nota para poder emitir la receta médica.
+      </span>
+
+      <!-- CASO 2: NOTA FIRMADA -->
+      <ng-container *ngIf="notaSeleccionada.firmado">
+        <!-- Si ya tiene una receta asociada -->
+        <button 
+          *ngIf="notaSeleccionada.recetaId" 
+          type="button" 
+          class="btn btn-outline-info mr-2" 
+          (click)="verPdfReceta(notaSeleccionada.recetaId)">
+          <i class="feather icon-file-text mr-1"></i> Ver Receta (#{{ notaSeleccionada.folioReceta || notaSeleccionada.recetaId }})
+        </button>
+
+        <!-- Botón para emitir receta -->
+        <button 
+          type="button" 
+          class="btn btn-success" 
+          (click)="modal.dismiss(); abrirFormularioReceta(notaSeleccionada.pacienteId, notaSeleccionada.id)">
+          <i class="feather icon-plus-circle mr-1"></i> Generar Receta
+        </button>
+      </ng-container>
+    </div>
+
+    <div>
+      <!-- BOTÓN EDITAR (SÓLO SI ES BORRADOR) -->
+      <button
+        *ngIf="!notaSeleccionada.firmado"
+        type="button"
+        class="btn btn-primary mr-2"
+        (click)="modal.dismiss(); editarNota(notaSeleccionada)"
+      >
+        <i class="feather icon-edit-2 mr-1"></i> Editar Nota
+      </button>
+
+      <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cerrar</button>
+    </div>
   </div>
 </ng-template>

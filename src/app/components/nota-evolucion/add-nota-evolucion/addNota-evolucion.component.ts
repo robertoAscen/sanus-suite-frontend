@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -14,6 +14,8 @@ export class AddNotaEvolucionComponent implements OnInit {
   title = 'Registrar Nota de Evolución';
   isEdit = false;
   isSubmit = false;
+
+  notaGuardadaId: number | null = null;
 
   nota: any = {
     id: null,
@@ -43,7 +45,8 @@ export class AddNotaEvolucionComponent implements OnInit {
     private router: Router,
     private toastr: ToastrService,
     private notaService: NotaEvolucionService,
-    private tokenStorageService: TokenStorageService
+    private tokenStorageService: TokenStorageService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -76,7 +79,6 @@ export class AddNotaEvolucionComponent implements OnInit {
   cargarNotaParaEdicion(id: number): void {
     this.notaService.obtenerPorId(id).subscribe({
       next: (res: any) => {
-        // Tu backend 'RespuestaApi' contiene la data en 'resultado'
         const data = res?.resultado || res?.datos || res;
 
         if (data) {
@@ -105,7 +107,6 @@ export class AddNotaEvolucionComponent implements OnInit {
             };
           }
 
-          // Mapeo directo desde la raíz de NotaEvolucionResponseDto
           this.nota.signosVitales = {
             presionArterial: data.presionArterial ?? '',
             frecuenciaCardiaca: data.frecuenciaCardiaca ?? null,
@@ -185,15 +186,36 @@ export class AddNotaEvolucionComponent implements OnInit {
       this.isEdit && this.nota.id ? this.notaService.actualizar(payload as any) : this.notaService.guardarOActualizar(payload);
 
     request$.subscribe({
-      next: (res) => {
+      next: (res: any) => {
         const msg = res?.mensaje || (this.isEdit ? 'Nota actualizada correctamente.' : 'Nota guardada correctamente.');
         this.toastr.success(msg, 'Éxito');
-        this.router.navigate(['/patients/patientList']);
+
+        const idExtraido = res?.resultado?.id ?? res?.resultado ?? res?.datos?.id ?? res?.id ?? this.nota.id;
+        this.notaGuardadaId = typeof idExtraido === 'number' ? idExtraido : (Number(idExtraido) || 1);
+
+        this.isSubmit = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         const errorMsg = err?.error?.mensaje || 'Error al procesar la solicitud.';
         this.toastr.error(errorMsg, 'Error');
       }
     });
+  }
+
+  irAReceta(): void {
+    // Ajusta la ruta base ('/prescriptions/add') a la definición exacta en tu AppRoutingModule
+    this.router.navigate(['/recetas-medica/nueva'], {
+      queryParams: {
+        pacienteId: this.nota.pacienteId,
+        notaEvolucionId: this.notaGuardadaId,
+        expedienteId: this.nota.numeroExpediente,
+        nombrePaciente: this.nota.nombrePaciente
+      }
+    });
+  }
+
+  irAlCatalogo(): void {
+    this.router.navigate(['/patients/patientList']);
   }
 }
