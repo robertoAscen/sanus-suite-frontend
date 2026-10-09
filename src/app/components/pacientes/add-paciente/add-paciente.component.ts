@@ -35,75 +35,110 @@ export class AddPacienteComponent implements OnInit {
     this.paciente = new Paciente(0, '', '', '', '', '', '', '', '', '', '', '');
   }
 
-  ngOnInit() {
-    this.title = 'Añadir Paciente';
+  ngOnInit(): void {
+    // Escuchamos si existe el parámetro 'id' en la ruta (ej. /patients/editPatient/:id)
+    this._route.params.subscribe((params: Params) => {
+      const id = params['id'];
+
+      if (id) {
+        this.isEdit = true;
+        this.title = 'Editar Datos del Paciente';
+        this.cargarPaciente(id);
+      } else {
+        this.isEdit = false;
+        this.title = 'Añadir Paciente';
+      }
+    });
   }
 
-  save(form: any) {
+  cargarPaciente(id: any): void {
+    this._pacienteService.getPatient(id).subscribe(
+      (response: any) => {
+        const datos = response?.resultado || response?.patient || response;
+
+        if (datos) {
+          this.paciente = datos;
+
+          // Si fechaNacimiento viene como string (ej. "1988-05-12"), lo parseamos a NgbDateStruct
+          if (this.paciente.fechaNacimiento && typeof this.paciente.fechaNacimiento === 'string') {
+            const partes = this.paciente.fechaNacimiento.split('-');
+            if (partes.length === 3) {
+              this.paciente.fechaNacimiento = {
+                year: parseInt(partes[0], 10),
+                month: parseInt(partes[1], 10),
+                day: parseInt(partes[2], 10)
+              } as any;
+            }
+          }
+        }
+      },
+      (error) => {
+        console.error('Error al cargar datos del paciente:', error);
+        Swal.fire('¡Error!', 'No se pudieron recuperar los datos del paciente.', 'error').then(() => {
+          this._router.navigate(['/patients/patientList']);
+        });
+      }
+    );
+  }
+
+  save(form: any): void {
     if (!form.valid) {
       this.isSubmit = true;
       return;
+    }
+
+    // 1. CLONAMOS EL OBJETO PARA NO ROMPER EL INPUT VISUAL EN LA PANTALLA
+    const payload = { ...this.paciente };
+
+    // 2. CORREGIMOS EL FORMATO DE LA FECHA (De Objeto NgbDate a String YYYY-MM-DD)
+    if (payload.fechaNacimiento && typeof payload.fechaNacimiento === 'object') {
+      const fecha: any = payload.fechaNacimiento;
+      const month = fecha.month < 10 ? `0${fecha.month}` : fecha.month;
+      const day = fecha.day < 10 ? `0${fecha.day}` : fecha.day;
+      payload.fechaNacimiento = `${fecha.year}-${month}-${day}`;
+    }
+
+    // 3. SI NO ES EDICIÓN, ELIMINAMOS EL ID DEL PAYLOAD
+    if (!this.isEdit) {
+      delete (payload as any).id;
+    }
+
+    if (!this.isEdit) {
+      this._pacienteService.createPatient(payload).subscribe(
+        (response) => {
+          if (response && (response.resultado || response.patient)) {
+            Swal.fire(
+              '¡Paciente creado!',
+              'El paciente se ha registrado exitosamente.',
+              'success'
+            ).then(() => {
+              this._router.navigate(['/patients/patientList']);
+            });
+          }
+        },
+        (error) => {
+          console.error('Error del servidor al crear paciente:', error);
+          Swal.fire('¡Error!', 'No se pudo guardar el registro: ' + (error.error?.mensaje || error.message), 'error');
+        }
+      );
     } else {
-      // 1. CLONAMOS EL OBJETO PARA NO ROMPER EL INPUT VISUAL EN LA PANTALLA
-      const payload = { ...this.paciente };
-
-      // 2. CORREGIMOS EL FORMATO DE LA FECHA (De Objeto NgbDate a String YYYY-MM-DD)
-      if (payload.fechaNacimiento && typeof payload.fechaNacimiento === 'object') {
-        const fecha: any = payload.fechaNacimiento;
-        
-        // Formateamos mes y día para asegurar que siempre tengan 2 dígitos (ej. 09 en lugar de 9)
-        const month = fecha.month < 10 ? `0${fecha.month}` : fecha.month;
-        const day = fecha.day < 10 ? `0${fecha.day}` : fecha.day;
-        
-        // Guardamos el string final de vuelta en la propiedad
-        payload.fechaNacimiento = `${fecha.year}-${month}-${day}`;
-      }
-
-      // 3. SI NO ES EDICIÓN, ELIMINAMOS EL ID DEL PAYLOAD PARA MANDARLO LIMPIO
-      if (!this.isEdit) {
-        delete (payload as any).id;
-      }
-
-      console.log('Payload corregido y listo para Sanus Suite API:');
-      console.log(payload);
-
-      // 4. MANDAMOS EL PAYLOAD FORMATEADO EN LUGAR DE THIS.PACIENTE
-      if (!this.isEdit) {
-        this._pacienteService.createPatient(payload).subscribe(
-          (response) => {
-            if (response && response.resultado) {
-              console.log('Servidor respondió con éxito:', response);
-
-              Swal.fire(
-                '¡Paciente creado!', 
-                `El paciente se ha registrado exitosamente en tu catálogo de Sanus Suite.`, 
-                'success'
-              ).then(() => {
-                this._router.navigate(['/patients/patientList']);
-              });
-            }
-          },
-          (error) => {
-            console.error('Error del servidor al crear paciente:', error);
-            Swal.fire('¡Error!', 'No se pudo guardar el registro: ' + (error.error?.mensaje || error.message), 'error');
+      this._pacienteService.updatePatient(this.paciente.id, payload).subscribe(
+        (response) => {
+          if (response) {
+            Swal.fire(
+              '¡Paciente actualizado!',
+              'Los datos del paciente se guardaron correctamente.',
+              'success'
+            ).then(() => {
+              this._router.navigate(['/patients/patientList']);
+            });
           }
-        );
-      } else {
-        // Lógica de actualización (PUT) pasando el payload correcto
-        this._pacienteService.updatePatient(this.paciente.id, payload).subscribe(
-          (response) => {
-            if (response && response.resultado) {
-              Swal.fire('¡Paciente actualizado!', 'Los cambios demográficos se guardaron correctamente.', 'success').then(() => {
-                this._router.navigate(['/patients/patientList']);
-              });
-            }
-          },
-          (error) => {
-            console.error('Error al actualizar paciente:', error);
-            Swal.fire('¡Error!', 'No se pudieron aplicar los cambios.', 'error');
-          }
-        );
-      }
+        },
+        (error) => {
+          console.error('Error al actualizar paciente:', error);
+          Swal.fire('¡Error!', 'No se pudieron aplicar los cambios.', 'error');
+        }
+      );
     }
   }
 }
