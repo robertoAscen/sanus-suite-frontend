@@ -1,0 +1,134 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          <i class="feather icon-file-text text-primary mr-2"></i>
+          Prescripción de Medicamentos
+        </h5>
+      </div>
+
+      <div class="card-body">
+        <!-- FORMULARIO DE PRESCRIPCIÓN -->
+        <form [formGroup]="recetaForm" (ngSubmit)="guardarYEmitirReceta()" *ngIf="!pdfPreviewUrl">
+          <div formArrayName="medicamentos">
+            <div
+              *ngFor="let item of medicamentos.controls; let i = index"
+              [formGroupName]="i"
+              class="card mb-3 border border-light shadow-sm"
+            >
+              <div class="card-header bg-light d-flex justify-content-between align-items-center py-2">
+                <span class="font-weight-bold text-secondary"> <i class="feather icon-disc mr-1"></i> Medicamento #{{ i + 1 }} </span>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="eliminarMedicamento(i)"
+                  *ngIf="medicamentos.length > 1"
+                >
+                  <i class="feather icon-trash-2 mr-1"></i> Eliminar
+                </button>
+              </div>
+
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 col-sm-12 mb-3">
+                    <label class="form-label font-weight-bold">Medicamento / Sustancia Activa <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="medicamento" placeholder="Ej. Paracetamol" />
+                  </div>
+
+                  <div class="col-md-3 col-sm-6 mb-3">
+                    <label class="form-label font-weight-bold">Presentación</label>
+                    <input type="text" class="form-control" formControlName="presentacion" placeholder="Ej. 500 mg" />
+                  </div>
+
+                  <div class="col-md-3 col-sm-6 mb-3">
+                    <label class="form-label font-weight-bold">Dosis <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="dosis" placeholder="Ej. 1 tableta" />
+                  </div>
+
+                  <div class="col-md-4 col-sm-6 mb-3">
+                    <label class="form-label font-weight-bold">Vía de Administración <span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="viaAdministracion">
+                      <option value="Oral">Oral</option>
+                      <option value="Intramuscular">Intramuscular</option>
+                      <option value="Intravenosa">Intravenosa</option>
+                      <option value="Tópica">Tópica</option>
+                      <option value="Oftálmica">Oftálmica</option>
+                      <option value="Sublingual">Sublingual</option>
+                      <option value="Inhalatoria">Inhalatoria</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-4 col-sm-6 mb-3">
+                    <label class="form-label font-weight-bold">Frecuencia <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="frecuencia" placeholder="Ej. Cada 8 horas" />
+                  </div>
+
+                  <div class="col-md-4 col-sm-12 mb-3">
+                    <label class="form-label font-weight-bold">Duración del Tratamiento <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" formControlName="duracionTratamiento" placeholder="Ej. Por 7 días" />
+                  </div>
+
+                  <div class="col-12 mb-2">
+                    <label class="form-label font-weight-bold">Indicaciones Adicionales</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      formControlName="indicacionesAdicionales"
+                      placeholder="Ej. Tomar junto con los alimentos"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <button type="button" class="btn btn-outline-primary" (click)="agregarMedicamento()">
+              <i class="feather icon-plus mr-1"></i> Agregar otro medicamento
+            </button>
+          </div>
+
+          <hr class="my-4" />
+
+          <div class="form-group mb-4">
+            <label class="form-label font-weight-bold">Observaciones Generales</label>
+            <textarea
+              class="form-control"
+              formControlName="observacionesGenerales"
+              rows="3"
+              placeholder="Recomendaciones generales de reposo, alimentación, medidas generales, etc."
+            ></textarea>
+          </div>
+
+          <!-- BOTÓN DE EMISIÓN CON SPINNER DE CARGA -->
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary px-4 py-2" [disabled]="recetaForm.invalid || cargandoPdf">
+              <span *ngIf="cargandoPdf" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+              <i *ngIf="!cargandoPdf" class="feather icon-check-circle mr-1"></i>
+              Emitir y Firmar Receta
+            </button>
+          </div>
+        </form>
+
+        <!-- VISOR DE PDF POST-EMISIÓN -->
+        <div *ngIf="pdfPreviewUrl" class="mt-2">
+          <div class="alert alert-success d-flex justify-content-between align-items-center mb-3">
+            <span>
+              <i class="feather icon-check-circle mr-2 font-weight-bold"></i>
+              <strong>Receta emitida y firmada exitosamente.</strong> Puedes imprimirla o guardarla.
+            </span>
+            <button type="button" class="btn btn-sm btn-outline-success font-weight-bold" (click)="resetearFormulario()">
+              <i class="feather icon-plus-circle mr-1"></i> Redactar Nueva Receta
+            </button>
+          </div>
+
+          <!-- CONTENEDOR EXPANDIDO PARA PDF -->
+          <div class="w-100 border rounded shadow-sm overflow-hidden" style="height: 80vh; min-height: 700px">
+            <iframe [src]="pdfPreviewUrl" class="w-100 h-100 border-0" allowfullscreen> </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
