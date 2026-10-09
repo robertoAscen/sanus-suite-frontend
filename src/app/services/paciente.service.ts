@@ -26,26 +26,29 @@ export class PacienteService {
     return this._http.post(this.url + '/sanus-suite/pacientes/api/v1/guardar', patient, { headers: headers });
 }
 
-updatePatient(id: any, patient: any): Observable<any> {
-    const token = localStorage.getItem('access_token');
+getPatient(id: any): Observable<any> {
     const tenantId = localStorage.getItem('tenant_id') || 'CLINICA-GDI-01'; 
     const usuario = localStorage.getItem('usuario') || 'Doc-1';
 
     let headers = new HttpHeaders()
-        .set('Content-Type', 'application/json')
-        .set('Authorization', 'Bearer ' + token)
-        .set('x-tenant-id', tenantId)
-        .set('x-usuario', usuario);
+      .set('Content-Type', 'application/json')
+      .set('x-tenant-id', tenantId)
+      .set('x-usuario', usuario);
 
-    // Apuntamos al endpoint de actualización correspondiente en tu v1
-    return this._http.put(this.url + '/sanus-suite/pacientes/api/v1/actualizar-paciente/' + id, patient, { headers: headers });
-}
+    // Endpoint correspondiente al GET por ID en v1
+    return this._http.get(this.url + '/sanus-suite/pacientes/api/v1/obtener/' + id, { headers: headers });
+  }
 
-  getPatient(id: any): Observable<any> {
+  updatePatient(id: any, patient: any): Observable<any> {
+    const tenantId = localStorage.getItem('tenant_id') || 'CLINICA-GDI-01'; 
+    const usuario = localStorage.getItem('usuario') || 'Doc-1';
+
     let headers = new HttpHeaders()
-      .set('Content-Type', 'application/raw')
-      .set('Authorization', 'Bearer ' + localStorage.getItem('access_token'));
-    return this._http.get(this.url + 'api/patient/' + id, { headers: headers });
+      .set('Content-Type', 'application/json')
+      .set('x-tenant-id', tenantId)
+      .set('x-usuario', usuario);
+
+    return this._http.put(this.url + '/sanus-suite/pacientes/api/v1/actualizar/' + id, patient, { headers: headers });
   }
 
   getPatientList(): Observable<any> {
