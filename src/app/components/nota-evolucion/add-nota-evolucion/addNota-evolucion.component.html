@@ -316,6 +316,35 @@
             </div>
           </div>
         </form>
+
+        <!-- ACCIONES POST-GUARDADO / REDIRECCIÓN A RECETA -->
+        <div class="row mt-4" *ngIf="notaGuardadaId">
+          <div class="col-sm-12">
+            <div class="alert alert-success d-flex align-items-center justify-content-between mb-0" role="alert">
+              <div>
+                <i class="feather icon-check-circle mr-2 font-weight-bold"></i>
+                <strong>Nota de Evolución asentada correctamente.</strong> ¿Deseas proceder a generar la receta médica?
+              </div>
+              <div>
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-outline-secondary mr-2 font-weight-bold" 
+                  (click)="irAlCatalogo()">
+                  <i class="feather icon-arrow-left mr-1"></i>
+                  Volver al Catálogo
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-sm btn-success font-weight-bold" 
+                  (click)="irAReceta()">
+                  <i class="feather icon-file-plus mr-1"></i>
+                  Generar Receta Médica
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </app-card>
   </div>

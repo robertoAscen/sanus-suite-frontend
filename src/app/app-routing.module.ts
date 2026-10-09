@@ -37,6 +37,10 @@ const routes: Routes = [
         loadChildren: () => import('./components/nota-evolucion/nota-evolucion.module').then((m) => m.NotaEvolucionModule)
       },
       {
+        path: 'recetas-medica',
+        loadChildren: () => import('./components/receta-medica/receta-medica.module').then((m) => m.RecetaMedicaModule)
+      },
+      {
         path: 'layout',
         loadChildren: () => import('./demo/pages/layout/layout.module').then((module) => module.LayoutModule)
       },
