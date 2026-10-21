@@ -54,13 +54,25 @@ export class NotaEvolucionService {
     return this.http.put<any>(`${this.url}${this.API_URL}/actualizar`, payload, { headers });
   }
 
-  /**
-   * Obtiene el listado de notas por número de expediente.
-   */
-  obtenerPorNumeroExpediente(numeroExpediente: string): Observable<NotaEvolucionListDto[]> {
-    const headers = this.getHeaders();
-    return this.http.get<NotaEvolucionListDto[]>(`${this.url}${this.API_URL}/expediente/${numeroExpediente}`, { headers });
+  // En src/app/services/nota-evolucion.service.ts
+
+obtenerPorNumeroExpediente(numExpediente: string): Observable<any> {
+  const token = localStorage.getItem('access_token');
+  const tenantId = localStorage.getItem('tenant_id') || 'CLINICA-GDI-01';
+  const usuarioId = localStorage.getItem('usuario_id') || '1'; // Header 'x-usuario-id' requerido por tu Controller
+
+  let headers = new HttpHeaders()
+    .set('Content-Type', 'application/json')
+    .set('x-tenant-id', tenantId)
+    .set('x-usuario-id', usuarioId);
+
+  if (token) {
+    headers = headers.set('Authorization', 'Bearer ' + token);
   }
+
+  // Apunta a la ruta exacta de tu @GetMapping("/expediente/{numExpediente}")
+  return this.http.get(`${this.url}${this.API_URL}/expediente/${numExpediente}`, { headers });
+}
 
   /**
    * Obtiene el detalle de una nota de evolución por ID.

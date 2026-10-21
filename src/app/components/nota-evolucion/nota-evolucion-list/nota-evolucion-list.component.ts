@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotaEvolucionService } from 'src/app/services/nota-evolucion.service';
 import { NotaEvolucionListDto } from 'src/app/models/nota-evolucion.model';
+import { RecetaMedicaService } from 'src/app/services/receta-medica.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-historico-notas-evolucion',
@@ -22,6 +24,7 @@ export class NotasEvolucionListComponent implements OnInit, OnDestroy {
 
   constructor(
     private notaService: NotaEvolucionService,
+    private recetaService: RecetaMedicaService,
     private route: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal
@@ -88,12 +91,19 @@ export class NotasEvolucionListComponent implements OnInit, OnDestroy {
 
   // Abre la receta generada en una pestaña nueva o en un visor
   verPdfReceta(recetaId: number | string): void {
-    this.modalService.dismissAll();
-    // Opción A: Abrir el PDF directamente si tu backend expone la URL
-    window.open(`/api/recetas-medicas/${recetaId}/pdf`, '_blank');
-
-    // Opción B: Si prefieres navegar a una vista de detalle:
-    // this.router.navigate(['/recetas/detalle', recetaId]);
+    const id = Number(recetaId);
+    
+    this.recetaService.obtenerPdf(id).subscribe({
+      next: (blob: Blob) => {
+        // Genera una URL temporal con el Blob devuelto por el servidor
+        const fileURL = URL.createObjectURL(blob);
+        window.open(fileURL, '_blank');
+      },
+      error: (err) => {
+        console.error('Error al generar el PDF de la receta:', err);
+        Swal.fire('¡Error!', 'No se pudo obtener el PDF de la receta médica.', 'error');
+      }
+    });
   }
 
   // Abrir modal con la nota seleccionada

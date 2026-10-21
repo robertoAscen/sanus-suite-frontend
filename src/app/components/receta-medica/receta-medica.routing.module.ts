@@ -6,14 +6,21 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        // Para cuando entres vía /notas-evolucion o /notas-evolucion?pacienteId=X&expedienteId=Y
-        path: '', 
-        loadChildren: () => import('./add-receta-medica/addReceta-medica.module').then((module) => module.AddRecetaMedicaModule)
+        path: '',
+        loadChildren: () => import('./add-receta-medica/addReceta-medica.module').then((m) => m.AddRecetaMedicaModule)
       },
       {
-        // Para cuando entres vía /notas-evolucion o /notas-evolucion?pacienteId=X&expedienteId=Y
-        path: 'nueva', 
-        loadChildren: () => import('./add-receta-medica/addReceta-medica.module').then((module) => module.AddRecetaMedicaModule)
+        path: 'nueva',
+        loadChildren: () => import('./add-receta-medica/addReceta-medica.module').then((m) => m.AddRecetaMedicaModule)
+      },
+      // SOPORTE PARA EL LISTADO DE RECETAS
+      {
+        path: 'recetasList/:numeroExpediente',
+        loadChildren: () => import('./receta-list/receta-list.module').then((m) => m.RecetaListModule)
+      },
+      {
+        path: 'recetasList',
+        loadChildren: () => import('./receta-list/receta-list.module').then((m) => m.RecetaListModule)
       }
     ]
   }
