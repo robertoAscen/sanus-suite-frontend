@@ -41,6 +41,10 @@ const routes: Routes = [
         loadChildren: () => import('./components/receta-medica/receta-medica.module').then((m) => m.RecetaMedicaModule)
       },
       {
+        path: 'citas',
+        loadChildren: () => import('./components/citas/citas.module').then((m) => m.CitasModule)
+      },
+      {
         path: 'layout',
         loadChildren: () => import('./demo/pages/layout/layout.module').then((module) => module.LayoutModule)
       },

@@ -287,13 +287,7 @@
           <div class="row align-items-center bg-light p-3 rounded border mx-0 mb-4">
             <div class="col-sm-12">
               <div class="custom-control custom-checkbox">
-                <input
-                  type="checkbox"
-                  class="custom-control-input"
-                  id="checkFirmado"
-                  name="firmado"
-                  [(ngModel)]="nota.firmado"
-                />
+                <input type="checkbox" class="custom-control-input" id="checkFirmado" name="firmado" [(ngModel)]="nota.firmado" />
                 <label class="custom-control-label font-weight-bold text-dark cursor-pointer" for="checkFirmado">
                   Firmar y asentar Nota de Evolución
                 </label>
@@ -317,34 +311,46 @@
           </div>
         </form>
 
-        <!-- ACCIONES POST-GUARDADO / REDIRECCIÓN A RECETA -->
+        <!-- ACCIONES POST-GUARDADO / REDIRECCIÓN A RECETA Y CITA -->
         <div class="row mt-4" *ngIf="notaGuardadaId">
           <div class="col-sm-12">
             <div class="alert alert-success d-flex align-items-center justify-content-between mb-0" role="alert">
               <div>
                 <i class="feather icon-check-circle mr-2 font-weight-bold"></i>
-                <strong>Nota de Evolución asentada correctamente.</strong> ¿Deseas proceder a generar la receta médica?
+                <strong>Nota de Evolución asentada correctamente.</strong> ¿Qué deseas hacer a continuación?
               </div>
-              <div>
-                <button 
-                  type="button" 
-                  class="btn btn-sm btn-outline-secondary mr-2 font-weight-bold" 
-                  (click)="irAlCatalogo()">
+              <div class="d-flex align-items-center">
+                <!-- 1. Volver al Catálogo -->
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary font-weight-bold"
+                  style="margin-right: 8px !important"
+                  (click)="irAlCatalogo()"
+                >
                   <i class="feather icon-arrow-left mr-1"></i>
                   Volver al Catálogo
                 </button>
-                <button 
-                  type="button" 
-                  class="btn btn-sm btn-success font-weight-bold" 
-                  (click)="irAReceta()">
+
+                <!-- 2. Agendar Próxima Cita -->
+                <a
+                  [routerLink]="['/citas/add-cita']"
+                  [queryParams]="{ pacienteId: nota.pacienteId }"
+                  class="btn btn-sm btn-outline-primary font-weight-bold"
+                  style="margin-right: 8px !important"
+                >
+                  <i class="feather icon-calendar mr-1"></i>
+                  Agendar Cita
+                </a>
+
+                <!-- 3. Generar Receta Médica -->
+                <button type="button" class="btn btn-sm btn-success font-weight-bold" (click)="irAReceta()">
                   <i class="feather icon-file-plus mr-1"></i>
-                  Generar Receta Médica
+                  Generar Receta
                 </button>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </app-card>
   </div>
