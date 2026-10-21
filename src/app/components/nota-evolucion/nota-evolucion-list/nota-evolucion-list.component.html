@@ -20,14 +20,39 @@
           </div>
         </div>
 
-        <div *ngIf="expedienteParam">
+        <!-- BOTONES SUPERIORES ESTILIZADOS Y ESPACIADOS -->
+        <div *ngIf="expedienteParam" class="d-flex align-items-center gap-2">
+          <!-- 1. Volver a Pacientes -->
           <button
             class="btn btn-outline-secondary font-weight-bold mr-2"
-            style="border-radius: 8px"
+            style="border-radius: 8px; padding: 8px 14px;"
             [routerLink]="['/patients/patientList']"
           >
             <i class="feather icon-arrow-left mr-1"></i> Volver a Pacientes
           </button>
+
+          <!-- 2. Ver Recetas del Paciente -->
+          <a
+            [routerLink]="['/recetas-medica', 'recetasList', expedienteParam]"
+            class="btn btn-outline-success font-weight-bold mr-2"
+            style="border-radius: 8px; padding: 8px 14px;"
+          >
+            <i class="feather icon-file-plus mr-1"></i> Ver Recetas
+          </a>
+
+          <!-- 3. Redactar Nueva Nota -->
+          <a
+            [routerLink]="['/notas-evolucion/nueva']"
+            [queryParams]="{
+              expedienteId: expedienteParam,
+              pacienteId: notas.length > 0 ? notas[0].pacienteId : null,
+              nombrePaciente: pacienteNombre
+            }"
+            class="btn btn-primary d-flex align-items-center font-weight-bold"
+            style="border-radius: 8px; padding: 8px 16px; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.15)"
+          >
+            <i class="feather icon-plus-circle mr-2" style="font-size: 16px"></i> Nueva Nota
+          </a>
         </div>
       </div>
 
@@ -117,6 +142,7 @@
                     >
                       <i class="feather icon-eye"></i>
                     </button>
+
                     <!-- SOLO VISIBLE SI NO ESTÁ FIRMADA -->
                     <button
                       *ngIf="!nota.firmado"
@@ -270,9 +296,9 @@
     </div>
   </div>
 
-  <!-- MODAL FOOTER CORREGIDO -->
+  <!-- MODAL FOOTER CON ESPACIADO FORZADO EN LÍNEA -->
   <div class="modal-footer d-flex justify-content-between align-items-center" *ngIf="notaSeleccionada">
-    <div>
+    <div class="d-flex align-items-center">
       <!-- CASO 1: NOTA EN BORRADOR / NO FIRMADA -->
       <span *ngIf="!notaSeleccionada.firmado" class="text-warning small font-weight-bold">
         <i class="feather icon-alert-circle mr-1"></i>
@@ -281,37 +307,44 @@
 
       <!-- CASO 2: NOTA FIRMADA -->
       <ng-container *ngIf="notaSeleccionada.firmado">
-        <!-- Si ya tiene una receta asociada -->
-        <button 
-          *ngIf="notaSeleccionada.recetaId" 
-          type="button" 
-          class="btn btn-outline-info mr-2" 
-          (click)="verPdfReceta(notaSeleccionada.recetaId)">
-          <i class="feather icon-file-text mr-1"></i> Ver Receta (#{{ notaSeleccionada.folioReceta || notaSeleccionada.recetaId }})
+        <!-- BOTÓN IMPRIMIR RECETA -->
+        <button
+          *ngIf="notaSeleccionada.recetaId"
+          type="button"
+          class="btn btn-info font-weight-bold"
+          style="border-radius: 6px; margin-right: 12px !important;"
+          (click)="verPdfReceta(notaSeleccionada.recetaId)"
+        >
+          <i class="feather icon-printer mr-1"></i> Imprimir Receta (#{{ notaSeleccionada.recetaId }})
         </button>
 
-        <!-- Botón para emitir receta -->
-        <button 
-          type="button" 
-          class="btn btn-success" 
-          (click)="modal.dismiss(); abrirFormularioReceta(notaSeleccionada.pacienteId, notaSeleccionada.id)">
+        <!-- BOTÓN GENERAR NUEVA RECETA -->
+        <button
+          type="button"
+          class="btn btn-success font-weight-bold"
+          style="border-radius: 6px;"
+          (click)="modal.dismiss(); abrirFormularioReceta(notaSeleccionada.pacienteId, notaSeleccionada.id)"
+        >
           <i class="feather icon-plus-circle mr-1"></i> Generar Receta
         </button>
       </ng-container>
     </div>
 
-    <div>
+    <div class="d-flex align-items-center">
       <!-- BOTÓN EDITAR (SÓLO SI ES BORRADOR) -->
       <button
         *ngIf="!notaSeleccionada.firmado"
         type="button"
-        class="btn btn-primary mr-2"
+        class="btn btn-primary"
+        style="border-radius: 6px; margin-right: 12px !important;"
         (click)="modal.dismiss(); editarNota(notaSeleccionada)"
       >
         <i class="feather icon-edit-2 mr-1"></i> Editar Nota
       </button>
 
-      <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cerrar</button>
+      <button type="button" class="btn btn-outline-secondary" style="border-radius: 6px;" (click)="modal.dismiss()">
+        Cerrar
+      </button>
     </div>
   </div>
 </ng-template>
