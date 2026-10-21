@@ -50,4 +50,14 @@ export class RecetaMedicaService {
       responseType: 'blob'
     });
   }
+
+  obtenerPorNumeroExpediente(numExpediente: string): Observable<RespuestaApi<RecetaMedicaResponseDto[]>> {
+    const headers = this.getHeaders();
+    return this.http.get<RespuestaApi<RecetaMedicaResponseDto[]>>(`${this.url}${this.API_URL}/expediente/${numExpediente}`, { headers });
+  }
+
+  listarTodas(): Observable<RespuestaApi<RecetaMedicaResponseDto[]>> {
+    const headers = this.getHeaders();
+    return this.http.get<RespuestaApi<RecetaMedicaResponseDto[]>>(`${this.url}${this.API_URL}/listar`, { headers });
+  }
 }

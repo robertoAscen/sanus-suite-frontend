@@ -111,6 +111,10 @@
                         <i class="feather icon-file-text text-info mr-2"></i> Histórico de Notas
                       </a>
 
+                      <a class="dropdown-item" [routerLink]="['/recetas-medica', 'recetasList', patient.numeroExpediente]">
+                        <i class="feather icon-file-plus text-success mr-2"></i> Histórico de Recetas
+                      </a>
+
                       <div class="dropdown-divider"></div>
 
                       <a class="dropdown-item" [routerLink]="['/patients/editPatient/', patient.id]">
