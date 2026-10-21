@@ -53,19 +53,18 @@ export const NavigationItems: NavigationItem[] = [
     id: 'gestionCitas',
     title: 'GESTIÓN DE CITAS',
     type: 'group',
-    icon: '',
     children: [
       {
         id: 'citas',
-        title: 'Citas',
+        title: 'Citas y Agenda',
         type: 'collapse',
-        icon: 'feather icon-calendar', // Un calendario es perfecto para citas
+        icon: 'feather icon-calendar',
         children: [
           {
             id: 'addCita',
-            title: 'Agendar cita',
+            title: 'Agendar Cita',
             type: 'item',
-            url: '/citas/addCita',
+            url: '/citas/add-cita', // <-- ASEGURAR QUE DIGA /citas/ Y NO /patients/
             breadcrumbs: false
           },
           {
