@@ -1,0 +1,75 @@
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [hidHeader]="true">
+      <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
+        <div class="d-flex align-items-center">
+          <div
+            class="text-white bg-primary d-flex align-items-center justify-content-center flex-shrink-0 mr-3"
+            style="width: 44px; height: 44px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.22)"
+          >
+            <i class="feather icon-box" style="font-size: 19px; line-height: 1"></i>
+          </div>
+          <div class="d-flex flex-column justify-content-center">
+            <h4 class="mb-1 font-weight-bold text-dark" style="letter-spacing: 0.5px">Nuevo Producto o Medicamento</h4>
+            <small class="text-muted">Da de alta insumos y artículos para el catálogo clínico</small>
+          </div>
+        </div>
+
+        <a [routerLink]="['/inventario/inventarioList']" class="btn btn-outline-secondary font-weight-bold" style="border-radius: 8px">
+          <i class="feather icon-arrow-left mr-1"></i> Cancelar / Volver
+        </a>
+      </div>
+
+      <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
+        <div class="row">
+          <div class="col-md-8 form-group">
+            <label class="font-weight-bold">Nombre del Producto / Medicamento <span class="text-danger">*</span></label>
+            <input type="text" formControlName="nombre" class="form-control" placeholder="Ej. Paracetamol 500mg" />
+          </div>
+
+          <div class="col-md-4 form-group">
+            <label class="font-weight-bold">Código / SKU</label>
+            <input type="text" formControlName="codigo" class="form-control" placeholder="Ej. MED-001" />
+          </div>
+
+          <div class="col-md-12 form-group">
+            <label class="font-weight-bold">Descripción / Presentación</label>
+            <textarea formControlName="descripcion" class="form-control" rows="2" placeholder="Ej. Caja con 20 tabletas"></textarea>
+          </div>
+
+          <div class="col-md-3 form-group">
+            <label class="font-weight-bold">Precio Compra ($)</label>
+            <input type="number" formControlName="precioCompra" class="form-control" step="0.01" />
+          </div>
+
+          <div class="col-md-3 form-group">
+            <label class="font-weight-bold">Precio Venta ($) <span class="text-danger">*</span></label>
+            <input type="number" formControlName="precioVenta" class="form-control" step="0.01" />
+          </div>
+
+          <div class="col-md-3 form-group">
+            <label class="font-weight-bold">Stock Inicial <span class="text-danger">*</span></label>
+            <input type="number" formControlName="stockActual" class="form-control" />
+          </div>
+
+          <div class="col-md-3 form-group">
+            <label class="font-weight-bold">Stock Mínimo Alerta <span class="text-danger">*</span></label>
+            <input type="number" formControlName="stockMinimo" class="form-control" />
+          </div>
+        </div>
+
+        <div class="text-right border-top pt-3 mt-2">
+          <button
+            type="submit"
+            class="btn btn-primary font-weight-bold"
+            style="border-radius: 8px; padding: 10px 24px"
+            [disabled]="cargando"
+          >
+            <i class="feather icon-check-circle mr-1"></i>
+            {{ cargando ? 'Guardando...' : 'Registrar Producto' }}
+          </button>
+        </div>
+      </form>
+    </app-card>
+  </div>
+</div>

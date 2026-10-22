@@ -79,29 +79,29 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
   {
-    id: 'gestionInvetarios',
-    title: 'GESTIÓN DE INVENTARIOS',
+    id: 'gestionInventario',
+    title: 'INVENTARIO Y FARMACIA',
     type: 'group',
     icon: '',
     children: [
       {
-        id: 'producto',
-        title: 'Productos',
+        id: 'inventarioMenu',
+        title: 'Catálogo y Stock',
         type: 'collapse',
-        icon: 'feather icon-package', // Un paquete/caja para inventario
+        icon: 'feather icon-box',
         children: [
           {
-            id: 'addProducto',
-            title: 'Añadir Producto',
+            id: 'inventarioList',
+            title: 'Ver Inventario',
             type: 'item',
-            url: '/productos/addProducto',
+            url: '/inventario/inventarioList',
             breadcrumbs: false
           },
           {
-            id: 'productoList',
-            title: 'Catálogo de Productos',
+            id: 'addProducto',
+            title: 'Nuevo Producto',
             type: 'item',
-            url: '/productos/productoList',
+            url: '/inventario/addProducto',
             breadcrumbs: false
           }
         ]
