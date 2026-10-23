@@ -18,10 +18,10 @@ const routes: Routes = [
         redirectTo: 'dashboard', // Redirige al dashboard por defecto si ya está autenticado
         pathMatch: 'full'
       },
-      {
+      /*{
         path: 'dashboard',
         loadChildren: () => import('./demo/dashboard/dashboard.module').then((module) => module.DashboardModule)
-      },
+      },*/
       {
         path: 'patients',
         // Si decidiste no proteger todo el admin, dejas el guard individual aquí:
@@ -47,6 +47,10 @@ const routes: Routes = [
       {
         path: 'inventario',
         loadChildren: () => import('./components/inventario/inventario.module').then((m) => m.InventarioModule)
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./components/dashboard/dashboard.module').then((m) => m.DashboardModule)
       },
       {
         path: 'layout',

@@ -1,0 +1,96 @@
+<div class="row">
+  <!-- Tarjeta 1: Total Pacientes -->
+  <div class="col-xl-3 col-md-6">
+    <app-card [hidHeader]="true" cardClass="bg-c-blue text-white">
+      <div class="row align-items-center">
+        <div class="col">
+          <h6 class="text-white m-b-0">Pacientes Registrados</h6>
+          <h3 class="text-white m-t-10 m-b-0">{{ resumen.totalPacientes }}</h3>
+        </div>
+        <div class="col-auto text-right">
+          <i class="feather icon-users f-50 text-white-50"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Tarjeta 2: Ingresos Totales -->
+  <div class="col-xl-3 col-md-6">
+    <app-card [hidHeader]="true" cardClass="bg-c-green text-white">
+      <div class="row align-items-center">
+        <div class="col">
+          <h6 class="text-white m-b-0">Ingresos Totales</h6>
+          <h3 class="text-white m-t-10 m-b-0">${{ resumen.ingresosTotales | number: '1.2-2' }}</h3>
+        </div>
+        <div class="col-auto text-right">
+          <i class="feather icon-dollar-sign f-50 text-white-50"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Tarjeta 3: Notas de Venta / Facturas -->
+  <div class="col-xl-3 col-md-6">
+    <app-card [hidHeader]="true" cardClass="bg-c-yellow text-white">
+      <div class="row align-items-center">
+        <div class="col">
+          <h6 class="text-white m-b-0">Notas de Venta</h6>
+          <h3 class="text-white m-t-10 m-b-0">{{ resumen.totalFacturas }}</h3>
+        </div>
+        <div class="col-auto text-right">
+          <i class="feather icon-credit-card f-50 text-white-50"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Tarjeta 4: Alertas de Stock Bajo -->
+  <div class="col-xl-3 col-md-6">
+    <app-card [hidHeader]="true" cardClass="bg-c-red text-white">
+      <div class="row align-items-center">
+        <div class="col">
+          <h6 class="text-white m-b-0">Alertas Stock Bajo</h6>
+          <h3 class="text-white m-t-10 m-b-0">{{ resumen.productosStockBajo }}</h3>
+        </div>
+        <div class="col-auto text-right">
+          <i class="feather icon-alert-triangle f-50 text-white-50"></i>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>
+
+<!-- Sección de Bienvenida / Acceso Rápido -->
+<div class="row">
+  <div class="col-sm-12">
+    <app-card [hidHeader]="true">
+      <div class="text-center py-4">
+        <h3 class="font-weight-bold text-dark mb-2">Bienvenido a Sanus Suite</h3>
+        <p class="text-muted">Sistema Integral de Gestión Clínica y Administrativa multi-tenant.</p>
+        <div class="mt-4 d-flex flex-wrap justify-content-center">
+          <a
+            [routerLink]="['/citas/citasList']"
+            class="btn btn-primary font-weight-bold mb-2"
+            style="border-radius: 8px; margin-right: 12px"
+          >
+            <i class="feather icon-calendar mr-1"></i> Ir a la Agenda
+          </a>
+          <a
+            [routerLink]="['/pacientes/patientList']"
+            class="btn btn-success font-weight-bold mb-2"
+            style="border-radius: 8px; margin-right: 12px"
+          >
+            <i class="feather icon-users mr-1"></i> Gestionar Pacientes
+          </a>
+          <a
+            [routerLink]="['/inventario/inventarioList']"
+            class="btn btn-warning font-weight-bold mb-2 text-white"
+            style="border-radius: 8px"
+          >
+            <i class="feather icon-box mr-1"></i> Ver Inventario
+          </a>
+        </div>
+      </div>
+    </app-card>
+  </div>
+</div>
