@@ -116,13 +116,20 @@ export const NavigationItems: NavigationItem[] = [
     children: [
       {
         id: 'caja',
-        title: 'Notas de venta',
+        title: 'Notas de Venta',
         type: 'collapse',
-        icon: 'feather icon-credit-card', // Tarjeta o billete para finanzas/pagos
+        icon: 'feather icon-credit-card',
         children: [
           {
+            id: 'facturaList',
+            title: 'Historial / Listado',
+            type: 'item',
+            url: '/factura/facturaList',
+            breadcrumbs: false
+          },
+          {
             id: 'addFactura',
-            title: 'Añadir Factura',
+            title: 'Nueva Nota de Venta',
             type: 'item',
             url: '/factura/addFactura',
             breadcrumbs: false
