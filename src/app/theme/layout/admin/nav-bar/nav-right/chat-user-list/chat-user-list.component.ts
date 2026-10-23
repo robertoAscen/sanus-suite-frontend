@@ -2,7 +2,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 // project import
-import { FriendsList } from 'src/app/fack-db/friends-list';
+// import { FriendsList } from 'src/app/fack-db/friends-list';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 import { FriendComponent } from './friend/friend.component';
 
@@ -21,7 +21,7 @@ export class ChatUserListComponent {
   searchFriends!: string;
 
   constructor() {
-    this.friendsList = FriendsList.friends;
+    // this.friendsList = FriendsList.friends;
   }
 
   ChatOn() {

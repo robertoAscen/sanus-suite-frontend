@@ -95,7 +95,7 @@ export default class AuthSigninV2Component implements OnInit {
           this.submitted = false;
 
           // Redirección por segmentos limpios para Lazy Loading
-          this.router.navigate(['dashboard', 'analytics']);
+          this.router.navigate(['dashboard']);
         },
         error: (err) => {
           this.loading = false;

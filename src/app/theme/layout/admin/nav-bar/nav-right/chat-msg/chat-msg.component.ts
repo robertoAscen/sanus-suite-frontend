@@ -2,8 +2,8 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 
 // project import
-import { FriendsList } from 'src/app/fack-db/friends-list';
-import { UserChat } from 'src/app/fack-db/user-chat';
+// import { FriendsList } from 'src/app/fack-db/friends-list';
+// import { UserChat } from 'src/app/fack-db/user-chat';
 import { SharedModule } from 'src/app/theme/shared/shared.module';
 
 @Component({
@@ -17,8 +17,8 @@ export class ChatMsgComponent implements OnInit {
   @Input() friendId!: number;
   @Output() ChatToggle = new EventEmitter();
   @ViewChild('newChat', { read: ElementRef, static: false }) newChat!: ElementRef;
-  friendsList = FriendsList.friends;
-  userChat = UserChat.chat;
+  // friendsList = FriendsList.friends;
+  // userChat = UserChat.chat;
   // eslint-disable-next-line
   chatMessage: any;
   message!: string;
@@ -31,12 +31,12 @@ export class ChatMsgComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chatMessage = findObjectByKeyValue(this.friendsList, 'id', this.friendId);
+    // this.chatMessage = findObjectByKeyValue(this.friendsList, 'id', this.friendId);
     if (this.chatMessage) {
-      const message = findObjectByKeyValue(this.userChat, 'friend_id', this.friendId);
-      if (message) {
-        this.chatMessage['chat'] = message['messages'];
-      }
+      // const message = findObjectByKeyValue(this.userChat, 'friend_id', this.friendId);
+      // if (message) {
+      //   // this.chatMessage['chat'] = message['messages'];
+      // }
     }
   }
 
