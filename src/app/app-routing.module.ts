@@ -45,6 +45,10 @@ const routes: Routes = [
         loadChildren: () => import('./components/citas/citas.module').then((m) => m.CitasModule)
       },
       {
+        path: 'factura',
+        loadChildren: () => import('./components/factura/factura.module').then((m) => m.FacturaModule)
+      },
+      {
         path: 'inventario',
         loadChildren: () => import('./components/inventario/inventario.module').then((m) => m.InventarioModule)
       },
