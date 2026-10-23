@@ -20,6 +20,22 @@ export interface NavigationItem {
 
 export const NavigationItems: NavigationItem[] = [
   {
+    id: 'principal',
+    title: 'INICIO',
+    type: 'group',
+    icon: '',
+    children: [
+      {
+        id: 'dashboard',
+        title: 'Dashboard',
+        type: 'item',
+        url: '/dashboard',
+        icon: 'feather icon-home',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
     id: 'gestionExpedientes',
     title: 'GESTIÓN DE EXPEDIENTES',
     type: 'group',
